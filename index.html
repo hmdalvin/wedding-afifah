@@ -102,7 +102,8 @@
         <p data-aos="fade-up">UNDANGAN PERNIKAHAN</p>
         <h1 style="font-family: 'Great Vibes'; font-size: 3.5rem; margin: 15px 0;">Afifah & Lathif</h1>
         <p style="font-size: 0.9rem; opacity: 0.8;">Kepada Yth. Bapak/Ibu/Saudara/i</p>
-        <h3 style="margin-top: 10px; font-weight: 600;">Tamu Undangan</h3>
+        <!-- ELEMENT YANG DIEDIT: Menambahkan id="guestName" -->
+        <h3 id="guestName" style="margin-top: 10px; font-weight: 600; font-size: 1.5rem; color: var(--gold);">Tamu Undangan</h3>
         <button class="open-btn" onclick="startInvitation()">BUKA UNDANGAN</button>
     </div>
 
@@ -193,6 +194,16 @@
     <script>
         AOS.init({ duration: 1000, once: true });
 
+        // LOGIKA BARU: Mengambil nama dari URL saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const guestName = urlParams.get('to');
+            if (guestName) {
+                // Mengubah tanda + atau %20 menjadi spasi agar tampilan rapi
+                document.getElementById('guestName').innerText = decodeURIComponent(guestName).replace(/[+]/g, ' ');
+            }
+        });
+
         // Fungsi Buka Undangan
         function startInvitation() {
             document.getElementById('overlay').style.transform = 'translateY(-100%)';
@@ -216,10 +227,14 @@
             setInterval(() => {
                 const now = new Date().getTime();
                 const d = target - now;
-                document.getElementById('days').innerText = Math.floor(d / (1000 * 60 * 60 * 24));
-                document.getElementById('hours').innerText = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                document.getElementById('mins').innerText = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
-                document.getElementById('secs').innerText = Math.floor((d % (1000 * 60)) / 1000);
+                
+                // Pastikan elemen ada sebelum diisi
+                if (document.getElementById('days')) {
+                    document.getElementById('days').innerText = Math.floor(d / (1000 * 60 * 60 * 24));
+                    document.getElementById('hours').innerText = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    document.getElementById('mins').innerText = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
+                    document.getElementById('secs').innerText = Math.floor((d % (1000 * 60)) / 1000);
+                }
             }, 1000);
         }
 
